@@ -1,0 +1,6 @@
+The application must have a grid on which shapes can be placed.
+There must be a system for making new shapes that conform to the grid pattern. 
+The shapes must be dragged and dropped onto the grid.
+The shapes must snap into place on the grid.
+The shapes must not allow overlap, and must indicate when the user has selected an acceptable space on the grid
+The user must be able to rotate the shapes when moving them.
