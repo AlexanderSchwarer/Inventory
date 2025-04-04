@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="Interface.css">
+<title>Page Title</title>
+</head>
+<body>
+
+    <div class="book">
+        <div class="gridPage" id="gridPage">
+        </div>
+        <div class="itemPage">
+            <div class="itemList">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+                <div>7</div>
+                <div>8</div>
+                <div>9</div>
+                <div>10</div>
+                <div>11</div>
+                <div>12</div>
+            </div>
+            <button class="make">make</button>
+            <button class="save">save</button>
+        </div>
+    </div>
+
+    <script>
+        //const div = document.createElement("div");
+        //div.className = "gridBlock";
+        for (let i = 0; i < 300; i++){
+            const div = document.createElement("div");
+            div.className = "gridBlock";
+            document.getElementById("gridPage").appendChild(div);
+        }
+        //document.getElementById("gridPage").appendChild(div);
+        
+    </script>
+
+</body>
+</html>
