@@ -12,11 +12,22 @@ body {
 .gridPage {
     --b: 30px;
     display: grid;
-    grid-template-columns: var(--b) var(--b) var(--b) var(--b) var(--b)  var(--b) var(--b) var(--b) var(--b) var(--b)  var(--b) var(--b) var(--b) var(--b) var(--b)  var(--b) var(--b) var(--b) var(--b) var(--b);
-    grid-template-rows: var(--b) var(--b) var(--b) var(--b) var(--b)  var(--b) var(--b) var(--b) var(--b) var(--b)  var(--b) var(--b) var(--b) var(--b) var(--b)  var(--b) var(--b) var(--b) var(--b) var(--b);
-    background-color: dodgerblue;
+    grid-template-columns: repeat(20, var(--b));
+    grid-template-rows: repeat(20, var(--b));
     padding: 10px;
     width: 50%;
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.gridContainer {
+    display: grid;
+    background-color: dodgerblue;
+}
+
+.gridSpanTest {
+    background-color: chocolate;
+    grid-area: 2 / 2 / span 8 / span 1;
 }
 
 .gridBlock {
@@ -44,7 +55,7 @@ body {
     background-color: lightgray;
     overflow: auto;
     
-    height: 100%;
+    height: 300px;
     width: 80%;
 }
 
@@ -58,7 +69,6 @@ body {
     height: auto;
     font-size: 200%;
 }
-
 .save {
     width: 80%;
     height: auto;
