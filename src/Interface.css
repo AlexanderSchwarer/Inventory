@@ -1,0 +1,76 @@
+body {
+    background-color: aquamarine;
+}
+
+.book {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: blue;
+}
+
+.gridPage {
+    --b: 30px;
+    display: grid;
+    grid-template-columns: repeat(20, var(--b));
+    grid-template-rows: repeat(20, var(--b));
+    padding: 10px;
+    width: 50%;
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.gridContainer {
+    display: grid;
+    background-color: dodgerblue;
+}
+
+.gridSpanTest {
+    background-color: chocolate;
+    grid-area: 2 / 2 / span 8 / span 1;
+}
+
+.gridBlock {
+    background-color: #f1f1f1;
+    border: 1px solid black;
+    padding: 10px;
+    font-size: 30px;
+}
+
+.itemPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: aqua;
+    width: 100%;
+}
+
+.itemList {
+    display: grid;
+    grid-template-columns: auto auto;
+    white-space: wrap;
+    justify-content: space-around;
+    align-items: center;
+    background-color: lightgray;
+    overflow: auto;
+    
+    height: 300px;
+    width: 80%;
+}
+
+.itemList > div {
+    font-size: 200%;
+    padding: 50%;
+}
+
+.make {
+    width: 80%;
+    height: auto;
+    font-size: 200%;
+}
+.save {
+    width: 80%;
+    height: auto;
+    font-size: 200%;
+}
