@@ -1,4 +1,6 @@
-
+:root {
+    --b: 2.34vw;
+}
 
 body {
     background-color: black;
@@ -13,12 +15,10 @@ body {
 }
 
 .gridPage {
-    --b: 2.1vw;
     display: grid;
     grid-template-columns: repeat(20, var(--b));
     grid-template-rows: repeat(20, var(--b));
     padding: 10px;
-    gap: 0.25vw;
     overflow-y: auto;
 }
 
@@ -30,16 +30,12 @@ body {
 }
 
 .gridSpanTest {
-    background-color: chocolate;
-    grid-column-end: span 1;
-    grid-row-end: span 5;
+    background-color: white;
     grid-row-start: 2;
     grid-column-start: 2;
-    /* width: 2.1vw;
-    height: 11.5vw; */
-    outline-style: outset;
-    outline-width: 3px;
-    outline-color: black;
+    border-style: outset;
+    border-width: 0.25vw;
+    border-color: black;
     position: static;
     --mousex: 22px;
     --mousey: 22px;
@@ -62,7 +58,9 @@ body {
 
 .gridBlock {
     background-color: #f1f1f1;
-    
+    border-width: 0.1vw;
+    border-color: rgb(112, 112, 112);
+    border-style: solid;
 }
 
 .itemPage {
