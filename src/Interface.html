@@ -1,27 +1,43 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <link rel="stylesheet" href="Interface.css">
-<title>Page Title</title>
-</head>
-<body>
-
+  <head>
+    <link rel="stylesheet" href="Interface.css" />
+    <title>Page Title</title>
+  </head>
+  <body>
     <div class="book">
-        <div class="gridContainer" id="gridContainer">
-            <div class="gridPage" id="gridPage"></div>
+      <div class="gridContainer" id="gridContainer">
+        <div class="gridPage" id="gridPage"></div>
+      </div>
+      <div class="itemPage">
+        <div class="itemList" id="itemSelector">
+          <div class="gridSpanTest">
+            <img
+              src="images/swordHorizontal.jpg"
+              alt="sword"
+              class="objectIcon"
+            />
+          </div>
+          <div class="gridSpanTest">
+            <img
+              src="images/swordHorizontal.jpg"
+              alt="sword"
+              class="objectIcon"
+            />
+          </div>
+          <div class="gridSpanTest">
+            <img
+              src="images/swordHorizontal.jpg"
+              alt="sword"
+              class="objectIcon"
+            />
+          </div>
         </div>
-        <div class="itemPage">
-            <div class="itemList">
-                <div class="itemObjectGrid">
-                    <div class="gridSpanTest"><img src="images/swordHorizontal.jpg" alt="sword" class="objectIcon"></div>
-                </div>
-            </div>
-            <button class="make">make</button>
-            <button class="save">save</button>
-        </div>
+        <button class="make">make</button>
+        <button class="save">save</button>
+      </div>
     </div>
 
     <script src="Interface.js"></script>
-
-</body>
+  </body>
 </html>
