@@ -38,7 +38,7 @@ for (let i = 0; i < 300; i++) {
   gridSpace.style.gridRowStart = row;
   gridSpace.style.gridColumnStart = column;
   gridSpace.id = pos;
-  gridSpace.addEventListener("click", place.bind(this, row, column));
+  gridSpace.addEventListener("click", placeItem.bind(this, row, column));
   gridBlocks.appendChild(gridSpace);
 }
 
@@ -59,9 +59,9 @@ gridBlocks.addEventListener("mousemove", (e) => {
   divSpan.style.setProperty("--mousey", e.clientY + "px");
 });
 
-divSpan.addEventListener("click", handle);
+divSpan.addEventListener("click", pickupItem);
 
-function handle() {
+function pickupItem() {
   if (!holding) {
     console.log("pickup");
     divSpan.style.position = "absolute";
@@ -72,12 +72,12 @@ function handle() {
   }
 }
 
-function place(r, c) {
+function placeItem(r, c) {
   if (holding) {
     console.log(r.toString().concat(",", c.toString()));
     row = r;
     column = c;
-    console.log("place");
+    console.log("placeItem");
     divSpan.style.position = "static";
     divSpan.style.gridRowStart = parseInt(r);
     divSpan.style.gridColumnStart = parseInt(c);
