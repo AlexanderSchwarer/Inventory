@@ -1,0 +1,10 @@
+{
+    "items" : [
+        {
+            "width": "1",
+            "height": "5",
+            "image": "images/swordVertical.jpg",
+            "name": "sword"
+        }
+    ]
+}

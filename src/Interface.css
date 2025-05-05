@@ -1,9 +1,11 @@
 :root {
-  --blockSize: 2.34vw;
+  --blockSize: 2.33vw;
+  --itemListBlocks: 20vw;
 }
 
 body {
   background-color: black;
+  height: 97svh; /*still don't know why this works*/
 }
 
 .book {
@@ -11,15 +13,30 @@ body {
   justify-content: space-around;
   align-items: flex-start;
   background-color: rgb(36, 36, 36);
-  height: 100svh;
+  height: 97svh;
+  /* padding: 1%; */
+}
+
+::-webkit-scrollbar {
+  width: 1vw;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .gridPage {
   display: grid;
   grid-template-columns: repeat(20, var(--blockSize));
-  grid-template-rows: repeat(20, var(--blockSize));
-  padding: 10px;
-  overflow-y: auto;
+  grid-template-rows: repeat(15, var(--blockSize));
+  padding: 1.3vw;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .gridContainer {
@@ -63,29 +80,31 @@ body {
   align-items: center;
   background-color: aqua;
   width: 100%;
+  height: 100%;
 }
 
 .itemList {
   display: grid;
   padding: 1%;
   gap: 4%;
-  grid-template-columns: 48% 48%;
+  grid-template-columns: var(--itemListBlocks) var(--itemListBlocks);
+  grid-template-rows: repeat(auto-fit, var(--itemListBlocks));
   white-space: wrap;
   justify-content: space-around;
   justify-items: center;
   background-color: lightgray;
   overflow: auto;
-  height: 50%;
-  width: 80%;
+  height: 70%;
+  width: 90%;
 }
 
 .make {
-  width: 80%;
-  height: auto;
+  width: 90%;
+  height: 15%;
   font-size: 200%;
 }
 .save {
-  width: 80%;
-  height: auto;
+  width: 90%;
+  height: 15%;
   font-size: 200%;
 }
