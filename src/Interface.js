@@ -13,20 +13,43 @@ class item {
 const root = document.documentElement;
 
 const gridBlocks = document.getElementById("gridPage");
+const itemSelector = document.getElementById("itemSelector");
 
 let holding = false;
 let row, column;
 let pos;
-const gridBlockLength = 2.34;
+const gridBlockLength = 2.3;
+const itemListBlock = 20;
+root.style.setProperty("--itemListBlocks", itemListBlock + "vw");
+root.style.setProperty("--blockSize", gridBlockLength + "vw");
 
 let items = [];
-let sword = new item(2, 5, "images/swordVertical.jpg", "sword");
-items.push(sword);
+let dagger = new item(1, 2, "images/dagger.png", "dagger");
+let shortsword = new item(1, 3, "images/shortsword.png", "shortsword");
+let longsword = new item(1, 4, "images/longsword.png", "longsword");
+items.push(dagger);
+items.push(shortsword);
+items.push(longsword);
 
 const slector = document.getElementById("itemSelector");
-// items.forEach(displayItem);
+items.forEach(displayItem);
 
-// function displayItem(item) {}
+function displayItem(item) {
+  const pickableItem = document.createElement("div");
+  pickableItem.className = "gridSpanTest";
+  const itemIcon = document.createElement("img");
+  itemIcon.src = item.image;
+  itemIcon.className = "objectIcon";
+  pickableItem.appendChild(itemIcon);
+  if (item.width > item.height) {
+    pickableItem.style.width = itemListBlock.toString().concat("vw");
+    pickableItem.style.height = ((item.height / item.width) * itemListBlock).toString().concat("vw");
+  } else {
+    pickableItem.style.height = itemListBlock.toString().concat("vw");
+    pickableItem.style.width = ((item.width / item.height) * itemListBlock).toString().concat("vw");
+  }
+  itemSelector.appendChild(pickableItem);
+}
 
 //  Adding grid background
 for (let i = 0; i < 300; i++) {
@@ -45,12 +68,12 @@ for (let i = 0; i < 300; i++) {
 // creating test object
 const divSpan = document.createElement("div");
 const img = document.createElement("img");
-img.src = "images/swordVertical.jpg";
+img.src = "images/longsword.png";
 img.className = "objectIcon";
 divSpan.className = "gridSpanTest";
 divSpan.appendChild(img);
-divSpan.style.width = (gridBlockLength * 2 - 0.5).toString().concat("vw");
-divSpan.style.height = (gridBlockLength * 5 - 0.5).toString().concat("vw");
+divSpan.style.width = (gridBlockLength * longsword.width - 0.5).toString().concat("vw");
+divSpan.style.height = (gridBlockLength * longsword.height - 0.5).toString().concat("vw");
 gridBlocks.appendChild(divSpan);
 
 // get mouse position inside the grid
@@ -63,7 +86,7 @@ divSpan.addEventListener("click", pickupItem);
 
 function pickupItem() {
   if (!holding) {
-    console.log("pickup");
+    console.log("pickupItem");
     divSpan.style.position = "absolute";
     divSpan.style.pointerEvents = "none";
     divSpan.style.borderWidth = "0.5vw";
