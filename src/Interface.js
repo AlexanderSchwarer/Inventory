@@ -82,14 +82,17 @@ for (let i = 0; i < 300; i++) {
   gridSpace.style.gridColumnStart = column;
   gridSpace.id = pos;
   gridSpace.addEventListener("click", placeItem.bind(this, row, column));
+  gridSpace.addEventListener("mouseenter", moveItem.bind(this, row, column));
   gridBlocks.appendChild(gridSpace);
 }
 
-// get mouse position inside the grid
-gridBlocks.addEventListener("mousemove", (e) => {
-  root.style.setProperty("--mousex", e.clientX + "px");
-  root.style.setProperty("--mousey", e.clientY + "px");
-});
+function moveItem(r, c){
+  if (holding) {
+    const item = document.getElementById(heldItemID);
+    item.style.gridColumnStart = c.toString();
+    item.style.gridRowStart = r.toString();
+  }
+}
 
 // copy item from menu
 function copyItem(itemType) {
@@ -126,7 +129,6 @@ function pickupItem(id) {
     console.log("pickupItem");
     heldItemID = id;
     const item = document.getElementById(id);
-    item.style.position = "absolute";
     item.style.pointerEvents = "none";
     item.style.borderWidth = "0.5vw";
     item.style.opacity = "0.6";
@@ -141,7 +143,7 @@ function placeItem(r, c) {
     row = r;
     column = c;
     console.log("placeItem");
-    item.style.position = "static";
+    // item.style.position = "static";
     item.style.gridRowStart = parseInt(r);
     item.style.gridColumnStart = parseInt(c);
     item.style.backgroundColor = "white";

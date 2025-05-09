@@ -1,8 +1,6 @@
 :root {
   --blockSize: 2.33vw;
   --itemListBlocks: 10vw;
-  --mousex: 22px;
-  --mousey: 22px;
 }
 
 body {
@@ -57,8 +55,6 @@ body {
   border-width: 0.25vw;
   border-color: black;
   position: static;
-  top: var(--mousey);
-  left: var(--mousex);
   border-radius: 1vw;
 }
 
