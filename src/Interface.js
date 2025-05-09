@@ -19,16 +19,18 @@ let holding = false;
 let row, column;
 let pos;
 const gridBlockLength = 2.3;
-const itemListBlock = 20;
+const itemListBlock = 12;
 root.style.setProperty("--itemListBlocks", itemListBlock + "vw");
 root.style.setProperty("--blockSize", gridBlockLength + "vw");
 
 let items = [];
-let dagger = new item(1, 2, "images/dagger.png", "dagger");
-let shortsword = new item(1, 3, "images/shortsword.png", "shortsword");
-let longsword = new item(1, 4, "images/longsword.png", "longsword");
+let dagger = new item(1, 2, "images/dagger.svg", "dagger");
+let shortsword = new item(1, 3, "images/ArmingSword.svg", "ArmingSword");
+let scimitar = new item(1, 3, "images/scimitar.svg", "scimitar");
+let longsword = new item(1, 4, "images/longsword.svg", "longsword");
 items.push(dagger);
 items.push(shortsword);
+items.push(scimitar);
 items.push(longsword);
 
 const slector = document.getElementById("itemSelector");
@@ -37,10 +39,13 @@ items.forEach(displayItem);
 function displayItem(item) {
   const pickableItem = document.createElement("div");
   pickableItem.className = "gridSpanTest";
+  const imagePadder = document.createElement("div");
+  imagePadder.className = "objectIconPadder";
   const itemIcon = document.createElement("img");
   itemIcon.src = item.image;
   itemIcon.className = "objectIcon";
-  pickableItem.appendChild(itemIcon);
+  imagePadder.appendChild(itemIcon);
+  pickableItem.appendChild(imagePadder);
   if (item.width > item.height) {
     pickableItem.style.width = itemListBlock.toString().concat("vw");
     pickableItem.style.height = ((item.height / item.width) * itemListBlock).toString().concat("vw");
@@ -68,10 +73,13 @@ for (let i = 0; i < 300; i++) {
 // creating test object
 const divSpan = document.createElement("div");
 const img = document.createElement("img");
-img.src = "images/longsword.png";
+const imagePadder = document.createElement("div");
+imagePadder.className = "objectIconPadder";
+img.src = "images/longsword.svg";
 img.className = "objectIcon";
 divSpan.className = "gridSpanTest";
-divSpan.appendChild(img);
+imagePadder.appendChild(img);
+divSpan.appendChild(imagePadder);
 divSpan.style.width = (gridBlockLength * longsword.width - 0.5).toString().concat("vw");
 divSpan.style.height = (gridBlockLength * longsword.height - 0.5).toString().concat("vw");
 gridBlocks.appendChild(divSpan);

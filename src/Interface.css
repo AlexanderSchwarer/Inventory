@@ -1,6 +1,6 @@
 :root {
   --blockSize: 2.33vw;
-  --itemListBlocks: 20vw;
+  --itemListBlocks: 10vw;
 }
 
 body {
@@ -43,10 +43,13 @@ body {
   display: grid;
   background-color: rgb(112, 112, 112);
   height: 100%;
-  width: 100vw;
+  width: 100%;
 }
 
 .gridSpanTest {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: white;
   border-style: outset;
   border-width: 0.25vw;
@@ -54,10 +57,14 @@ body {
   position: static;
   --mousex: 22px;
   --mousey: 22px;
-  width: 4.18vw;
-  height: 18.2vw;
   top: var(--mousey);
   left: var(--mousex);
+  border-radius: 1vw;
+}
+
+.objectIconPadder {
+  width: 90%;
+  height: 90%;
 }
 
 .objectIcon {
@@ -86,12 +93,13 @@ body {
 .itemList {
   display: grid;
   padding: 1%;
-  gap: 4%;
-  grid-template-columns: var(--itemListBlocks) var(--itemListBlocks);
+  gap: 3.5vw;
+  grid-template-columns: repeat(3, var(--itemListBlocks));
   grid-template-rows: repeat(auto-fit, var(--itemListBlocks));
   white-space: wrap;
   justify-content: space-around;
   justify-items: center;
+  align-items: center;
   background-color: lightgray;
   overflow: auto;
   height: 70%;
