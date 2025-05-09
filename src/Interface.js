@@ -10,19 +10,24 @@ class item {
   }
 }
 
+// getting constant elements
 const root = document.documentElement;
-
 const gridBlocks = document.getElementById("gridPage");
 const itemSelector = document.getElementById("itemSelector");
 
+// global variables
 let holding = false;
 let row, column;
 let pos;
+let idCounter = 0;
+let heldItemID;
 const gridBlockLength = 2.3;
 const itemListBlock = 12;
+// constant css variables are set to the above constant values
 root.style.setProperty("--itemListBlocks", itemListBlock + "vw");
 root.style.setProperty("--blockSize", gridBlockLength + "vw");
 
+// Populating Item menu
 let items = [];
 let dagger = new item(1, 2, "images/dagger.svg", "dagger");
 let shortsword = new item(1, 3, "images/ArmingSword.svg", "ArmingSword");
@@ -38,21 +43,31 @@ items.forEach(displayItem);
 
 function displayItem(item) {
   const pickableItem = document.createElement("div");
-  pickableItem.className = "gridSpanTest";
   const imagePadder = document.createElement("div");
-  imagePadder.className = "objectIconPadder";
   const itemIcon = document.createElement("img");
+
+  pickableItem.className = "item";
+  imagePadder.className = "objectIconPadder";
   itemIcon.src = item.image;
   itemIcon.className = "objectIcon";
+
   imagePadder.appendChild(itemIcon);
   pickableItem.appendChild(imagePadder);
+
   if (item.width > item.height) {
     pickableItem.style.width = itemListBlock.toString().concat("vw");
-    pickableItem.style.height = ((item.height / item.width) * itemListBlock).toString().concat("vw");
+    pickableItem.style.height = ((item.height / item.width) * itemListBlock)
+      .toString()
+      .concat("vw");
   } else {
     pickableItem.style.height = itemListBlock.toString().concat("vw");
-    pickableItem.style.width = ((item.width / item.height) * itemListBlock).toString().concat("vw");
+    pickableItem.style.width = ((item.width / item.height) * itemListBlock)
+      .toString()
+      .concat("vw");
   }
+
+  pickableItem.addEventListener("mousedown", copyItem.bind(this, item));
+
   itemSelector.appendChild(pickableItem);
 }
 
@@ -70,35 +85,51 @@ for (let i = 0; i < 300; i++) {
   gridBlocks.appendChild(gridSpace);
 }
 
-// creating test object
-const divSpan = document.createElement("div");
-const img = document.createElement("img");
-const imagePadder = document.createElement("div");
-imagePadder.className = "objectIconPadder";
-img.src = "images/longsword.svg";
-img.className = "objectIcon";
-divSpan.className = "gridSpanTest";
-imagePadder.appendChild(img);
-divSpan.appendChild(imagePadder);
-divSpan.style.width = (gridBlockLength * longsword.width - 0.5).toString().concat("vw");
-divSpan.style.height = (gridBlockLength * longsword.height - 0.5).toString().concat("vw");
-gridBlocks.appendChild(divSpan);
-
 // get mouse position inside the grid
 gridBlocks.addEventListener("mousemove", (e) => {
-  divSpan.style.setProperty("--mousex", e.clientX + "px");
-  divSpan.style.setProperty("--mousey", e.clientY + "px");
+  root.style.setProperty("--mousex", e.clientX + "px");
+  root.style.setProperty("--mousey", e.clientY + "px");
 });
 
-divSpan.addEventListener("click", pickupItem);
+// copy item from menu
+function copyItem(itemType) {
+  const item = document.createElement("div");
+  const imagePadder = document.createElement("div");
+  const icon = document.createElement("img");
 
-function pickupItem() {
+  imagePadder.className = "objectIconPadder";
+  icon.className = "objectIcon";
+  icon.src = itemType.image;
+  item.className = "item";
+  let itemID = itemType.name.concat(idCounter.toString());
+  item.id = itemID;
+
+  imagePadder.appendChild(icon);
+  item.appendChild(imagePadder);
+
+  item.style.width = (gridBlockLength * itemType.width - 0.5)
+    .toString()
+    .concat("vw");
+  item.style.height = (gridBlockLength * itemType.height - 0.5)
+    .toString()
+    .concat("vw");
+
+  item.addEventListener("mousedown", pickupItem.bind(this, itemID));
+  idCounter++;
+
+  gridBlocks.appendChild(item);
+  pickupItem(itemID);
+}
+
+function pickupItem(id) {
   if (!holding) {
     console.log("pickupItem");
-    divSpan.style.position = "absolute";
-    divSpan.style.pointerEvents = "none";
-    divSpan.style.borderWidth = "0.5vw";
-    divSpan.style.opacity = "0.6";
+    heldItemID = id;
+    const item = document.getElementById(id);
+    item.style.position = "absolute";
+    item.style.pointerEvents = "none";
+    item.style.borderWidth = "0.5vw";
+    item.style.opacity = "0.6";
     holding = true;
   }
 }
@@ -106,16 +137,18 @@ function pickupItem() {
 function placeItem(r, c) {
   if (holding) {
     console.log(r.toString().concat(",", c.toString()));
+    const item = document.getElementById(heldItemID);
     row = r;
     column = c;
     console.log("placeItem");
-    divSpan.style.position = "static";
-    divSpan.style.gridRowStart = parseInt(r);
-    divSpan.style.gridColumnStart = parseInt(c);
-    divSpan.style.backgroundColor = "white";
-    divSpan.style.pointerEvents = "auto";
-    divSpan.style.borderWidth = "0.25vw";
-    divSpan.style.opacity = "1";
+    item.style.position = "static";
+    item.style.gridRowStart = parseInt(r);
+    item.style.gridColumnStart = parseInt(c);
+    item.style.backgroundColor = "white";
+    item.style.pointerEvents = "auto";
+    item.style.borderWidth = "0.25vw";
+    item.style.opacity = "1";
     holding = false;
+    heldItemID = "";
   }
 }

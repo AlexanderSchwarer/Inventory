@@ -1,6 +1,8 @@
 :root {
   --blockSize: 2.33vw;
   --itemListBlocks: 10vw;
+  --mousex: 22px;
+  --mousey: 22px;
 }
 
 body {
@@ -46,7 +48,7 @@ body {
   width: 100%;
 }
 
-.gridSpanTest {
+.item {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,8 +57,6 @@ body {
   border-width: 0.25vw;
   border-color: black;
   position: static;
-  --mousex: 22px;
-  --mousey: 22px;
   top: var(--mousey);
   left: var(--mousex);
   border-radius: 1vw;
