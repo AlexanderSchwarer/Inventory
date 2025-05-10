@@ -86,11 +86,17 @@ for (let i = 0; i < 300; i++) {
   gridBlocks.appendChild(gridSpace);
 }
 
-function moveItem(r, c){
-  if (holding) {
+// deleting items
+root.addEventListener("keydown", deleteItem);
+
+function deleteItem(event){
+  if (holding && event.key=="x") {
+    console.log("delete");
     const item = document.getElementById(heldItemID);
-    item.style.gridColumnStart = c.toString();
-    item.style.gridRowStart = r.toString();
+    item.removeEventListener("mousedown", pickupItem);
+    item.remove();
+    holding = false;
+    heldItemID = "";
   }
 }
 
@@ -133,6 +139,14 @@ function pickupItem(id) {
     item.style.borderWidth = "0.5vw";
     item.style.opacity = "0.6";
     holding = true;
+  }
+}
+
+function moveItem(r, c){
+  if (holding) {
+    const item = document.getElementById(heldItemID);
+    item.style.gridColumnStart = c.toString();
+    item.style.gridRowStart = r.toString();
   }
 }
 
