@@ -10,33 +10,49 @@ class item {
   }
 }
 
+class inventoryItem extends item {
+  constructor(position, id, width, height, image, name) {
+    super(width, height, image, name);
+    this.position = position;
+    this.id = id;
+  }
+}
+
 // getting constant elements
 const root = document.documentElement;
 const gridBlocks = document.getElementById("gridPage");
 const itemSelector = document.getElementById("itemSelector");
 
 // global variables
+
 let holding = false;
 let row, column;
 let pos;
 let idCounter = 0;
 let heldItemID;
+let loading = false;
 const gridBlockLength = 2.3;
 const itemListBlock = 12;
 // constant css variables are set to the above constant values
 root.style.setProperty("--itemListBlocks", itemListBlock + "vw");
 root.style.setProperty("--blockSize", gridBlockLength + "vw");
 
-// Populating Item menu
+// Populating Item menu -- to be moved to a separate file for scalability
 let items = [];
 let dagger = new item(1, 2, "images/dagger.svg", "dagger");
+let club = new item(1, 3, "images/Club.svg", "club");
+let greatclub = new item(1, 5, "images/Greatclub.svg", "greatclub");
 let shortsword = new item(1, 3, "images/ArmingSword.svg", "ArmingSword");
 let scimitar = new item(1, 3, "images/scimitar.svg", "scimitar");
 let longsword = new item(1, 4, "images/longsword.svg", "longsword");
 items.push(dagger);
+items.push(club);
+items.push(greatclub);
 items.push(shortsword);
 items.push(scimitar);
 items.push(longsword);
+
+let inventory = {};
 
 const slector = document.getElementById("itemSelector");
 items.forEach(displayItem);
@@ -86,18 +102,63 @@ for (let i = 0; i < 300; i++) {
   gridBlocks.appendChild(gridSpace);
 }
 
-// deleting items
 root.addEventListener("keydown", deleteItem);
 
-function deleteItem(event){
-  if (holding && event.key=="x") {
-    console.log("delete");
-    const item = document.getElementById(heldItemID);
+function loadItems(profile) {
+  loading = true;
+  for (let currentItem in inventory) {
+    const item = document.getElementById(currentItem);
     item.removeEventListener("mousedown", pickupItem);
     item.remove();
-    holding = false;
-    heldItemID = "";
   }
+  inventory = JSON.parse(localStorage.getItem(profile)).items;
+  idCounter = JSON.parse(localStorage.getItem(profile)).idCount;
+  for (let incomingItem in inventory) {
+    copyItemFromFile(inventory[incomingItem]);
+  }
+  // need to save current items?
+  loading = false;
+}
+
+function saveItems(profile) {
+  localStorage.setItem(profile, JSON.stringify({items: inventory, idCount: idCounter}));
+}
+
+function copyItemFromFile(itemType) {
+  const item = document.createElement("div");
+  const imagePadder = document.createElement("div");
+  const icon = document.createElement("img");
+
+  imagePadder.className = "objectIconPadder";
+  icon.className = "objectIcon";
+  icon.src = itemType.image;
+  item.className = "item";
+  let itemID = itemType.id;
+  item.id = itemID;
+
+  imagePadder.appendChild(icon);
+  item.appendChild(imagePadder);
+
+  item.style.width = (gridBlockLength * itemType.width - 0.5)
+    .toString()
+    .concat("vw");
+  item.style.height = (gridBlockLength * itemType.height - 0.5)
+    .toString()
+    .concat("vw");
+
+  item.style.gridRowStart = itemType.position.r;
+  item.style.gridColumnStart = itemType.position.c;
+
+  item.addEventListener("mousedown", pickupItem.bind(this, itemID));
+  inventory[itemID] = new inventoryItem(
+    { r: itemType.position.r, c: itemType.position.c },
+    itemID,
+    itemType.width,
+    itemType.height,
+    itemType.image,
+    itemType.name
+  );
+  gridBlocks.appendChild(item);
 }
 
 // copy item from menu
@@ -127,6 +188,14 @@ function copyItem(itemType) {
   idCounter++;
 
   gridBlocks.appendChild(item);
+  inventory[itemID] = new inventoryItem(
+    { r: -1, c: -1 },
+    itemID,
+    itemType.width,
+    itemType.height,
+    itemType.image,
+    itemType.name
+  );
   pickupItem(itemID);
 }
 
@@ -142,11 +211,24 @@ function pickupItem(id) {
   }
 }
 
-function moveItem(r, c){
+function moveItem(r, c) {
   if (holding) {
     const item = document.getElementById(heldItemID);
     item.style.gridColumnStart = c.toString();
     item.style.gridRowStart = r.toString();
+  }
+}
+
+// deleting items
+function deleteItem(event) {
+  if (holding && event.key == "x") {
+    console.log("delete");
+    const item = document.getElementById(heldItemID);
+    item.removeEventListener("mousedown", pickupItem);
+    item.remove();
+    delete inventory[heldItemID];
+    holding = false;
+    heldItemID = "";
   }
 }
 
@@ -157,13 +239,13 @@ function placeItem(r, c) {
     row = r;
     column = c;
     console.log("placeItem");
-    // item.style.position = "static";
     item.style.gridRowStart = parseInt(r);
     item.style.gridColumnStart = parseInt(c);
-    item.style.backgroundColor = "white";
     item.style.pointerEvents = "auto";
     item.style.borderWidth = "0.25vw";
     item.style.opacity = "1";
+    inventory[heldItemID].position.r = r;
+    inventory[heldItemID].position.c = c;
     holding = false;
     heldItemID = "";
   }
