@@ -42,15 +42,20 @@ let items = [];
 let dagger = new item(1, 2, "images/dagger.svg", "dagger");
 let club = new item(1, 3, "images/Club.svg", "club");
 let greatclub = new item(1, 5, "images/Greatclub.svg", "greatclub");
+let handaxe = new item(1, 2, "images/Handaxe.svg", "handaxe");
 let shortsword = new item(1, 3, "images/ArmingSword.svg", "ArmingSword");
 let scimitar = new item(1, 3, "images/scimitar.svg", "scimitar");
 let longsword = new item(1, 4, "images/longsword.svg", "longsword");
+let whip = new item(2, 2, "images/Whip.svg", "whip");
+
 items.push(dagger);
 items.push(club);
 items.push(greatclub);
 items.push(shortsword);
 items.push(scimitar);
 items.push(longsword);
+items.push(whip);
+items.push(handaxe);
 
 let inventory = {};
 
@@ -67,7 +72,7 @@ function displayItem(item) {
   imagePadder.className = "objectIconPadder";
   itemIcon.src = item.image;
   itemIcon.className = "objectIcon";
-  itemSize.className = "tooltipText";
+  itemSize.className = "tooltip";
   itemSize.innerHTML = "[" + item.width.toString() + ":" + item.height.toString() + "]";
   
   imagePadder.appendChild(itemIcon);
@@ -132,6 +137,7 @@ function copyItemFromFile(itemType) {
   const item = document.createElement("div");
   const imagePadder = document.createElement("div");
   const icon = document.createElement("img");
+  const itemName = document.createElement("div");
 
   imagePadder.className = "objectIconPadder";
   icon.className = "objectIcon";
@@ -139,9 +145,12 @@ function copyItemFromFile(itemType) {
   item.className = "item";
   let itemID = itemType.id;
   item.id = itemID;
+  itemName.className = "tooltip";
+  itemName.innerHTML = itemType.name;
 
   imagePadder.appendChild(icon);
   item.appendChild(imagePadder);
+  item.appendChild(itemName);
 
   item.style.width = (gridBlockLength * itemType.width - 0.5)
     .toString()
@@ -170,6 +179,7 @@ function copyItem(itemType) {
   const item = document.createElement("div");
   const imagePadder = document.createElement("div");
   const icon = document.createElement("img");
+  const itemName = document.createElement("div");
 
   imagePadder.className = "objectIconPadder";
   icon.className = "objectIcon";
@@ -177,9 +187,12 @@ function copyItem(itemType) {
   item.className = "item";
   let itemID = itemType.name.concat(idCounter.toString());
   item.id = itemID;
+  itemName.className = "tooltip";
+  itemName.innerHTML = itemType.name;
 
   imagePadder.appendChild(icon);
   item.appendChild(imagePadder);
+  item.appendChild(itemName);
 
   item.style.width = (gridBlockLength * itemType.width - 0.5)
     .toString()
