@@ -61,14 +61,18 @@ function displayItem(item) {
   const pickableItem = document.createElement("div");
   const imagePadder = document.createElement("div");
   const itemIcon = document.createElement("img");
+  const itemSize = document.createElement("div");
 
   pickableItem.className = "item";
   imagePadder.className = "objectIconPadder";
   itemIcon.src = item.image;
   itemIcon.className = "objectIcon";
-
+  itemSize.className = "tooltipText";
+  itemSize.innerHTML = "[" + item.width.toString() + ":" + item.height.toString() + "]";
+  
   imagePadder.appendChild(itemIcon);
   pickableItem.appendChild(imagePadder);
+  pickableItem.appendChild(itemSize);
 
   if (item.width > item.height) {
     pickableItem.style.width = itemListBlock.toString().concat("vw");
@@ -221,7 +225,7 @@ function moveItem(r, c) {
 
 // deleting items
 function deleteItem(event) {
-  if (holding && event.key == "x") {
+  if (holding && (event.key == "x" || event.key == "Escape")) {
     console.log("delete");
     const item = document.getElementById(heldItemID);
     item.removeEventListener("mousedown", pickupItem);

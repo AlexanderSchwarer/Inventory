@@ -4,7 +4,7 @@
 }
 
 body {
-  background-color: black;
+  background-color: rgb(112, 112, 112);
   height: 97svh; /*still don't know why this works*/
 }
 
@@ -12,7 +12,7 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
-  background-color: rgb(36, 36, 36);
+  background-color: rgb(112, 112, 112);
   height: 95%;
   padding-top: 1%;
   padding-bottom: 1%;
@@ -22,10 +22,10 @@ body {
   width: 1vw;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: rgb(112, 112, 112);
 }
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #b3b3b3;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
@@ -55,7 +55,7 @@ body {
   border-style: outset;
   border-width: 0.25vw;
   border-color: black;
-  position: static;
+  position: relative;
   border-radius: 1vw;
 }
 
@@ -77,6 +77,10 @@ body {
   border-style: solid;
 }
 
+.gridBlock:hover {
+  background-color: #505050;
+}
+
 .itemPage {
   display: flex;
   flex-direction: column;
@@ -89,7 +93,8 @@ body {
 
 .itemList {
   display: grid;
-  padding: 1%;
+  padding-top: 5%;
+  padding-bottom: 5%;
   row-gap: 3vw;
   column-gap: 0vw;
   grid-template-columns: repeat(3, var(--itemListBlocks));
@@ -98,24 +103,40 @@ body {
   justify-content: space-around;
   justify-items: center;
   align-items: center;
-  background-color: lightgray;
+  background-color: #3f3f3f;
   overflow: auto;
-  height: 70%;
+  height: 50%;
   width: 90%;
+  border: 0.5svw ridge black;
 }
 
-.make {
-  width: 90%;
-  height: 15%;
-  font-size: 200%;
+.item .tooltipText{
+  visibility: hidden;
+  width: auto;
+  background-color: #b3b3b3;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  top: 105%;
+  /* left: 50%;
+  margin-left: -60px; */
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-family: 'Courier New', Courier, monospace;
 }
-.save {
-  width: 90%;
-  height: 15%;
-  font-size: 200%;
+
+.item:hover .tooltipText{
+  visibility: visible;
+  opacity: 1;
 }
-.load {
+
+button {
   width: 90%;
-  height: 15%;
+  height: 9%;
   font-size: 200%;
+  font-family: Garamond, 'Times New Roman', Times, serif;
+  font-weight: bold;
 }
+
