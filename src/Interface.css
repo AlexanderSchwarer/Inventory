@@ -1,6 +1,8 @@
 :root {
   --blockSize: 2.33vw;
   --itemListBlocks: 10vw;
+  --mousex: 0px;
+  --mousey: 0px;
 }
 
 body {
@@ -51,7 +53,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(255, 131, 131);
+  background-color: #ad9d9d;
   border-style: outset;
   border-width: 0.25vw;
   border-color: black;
@@ -110,7 +112,7 @@ body {
   border: 0.5svw ridge black;
 }
 
-.item .tooltip{
+.item .tooltip {
   visibility: hidden;
   width: auto;
   background-color: #b3b3b3;
@@ -122,10 +124,10 @@ body {
   top: 105%;
   opacity: 0;
   transition: opacity 0.3s;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
 }
 
-.item:hover .tooltip{
+.item:hover .tooltip {
   visibility: visible;
   opacity: 1;
 }
@@ -134,7 +136,58 @@ button {
   width: 90%;
   height: 9%;
   font-size: 200%;
-  font-family: Garamond, 'Times New Roman', Times, serif;
+  font-family: Garamond, "Times New Roman", Times, serif;
   font-weight: bold;
 }
 
+.contextMenu {
+  display: flex;
+  background-color: #222222;
+  flex-direction: column;
+  z-index: 2;
+  border-radius: 3px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  position: absolute;
+  opacity: 1;
+  top: var(--mousey);
+  left: var(--mousex);
+  opacity: 0;
+}
+
+.contextMenu .option {
+  background-color: #222222;
+  width: 100px;
+  height: 30px;
+  line-height: 30px;
+  color: whitesmoke;
+  font-family: "Courier New", Courier, monospace;
+  padding-left: 3px;
+  padding-right: 4px;
+  user-select: none;
+}
+
+.contextMenu .option:hover {
+  background-color: #3f3f3f;
+}
+
+.contextMenu .option .colourOption {
+  display: grid;
+  grid-template-columns: repeat(7, 18px);
+  width: 126px;
+  height: 30px;
+  padding-right: 3px;
+  translate: 104px -30px;
+  background-color: #222222;
+  visibility: hidden;
+  opacity: 0;
+  border-radius: 0px 4px 4px 0px;
+}
+
+.contextMenu .option .colourOption .colour {
+  justify-self: center;
+  align-self: center;
+  width: 15px;
+  height: 20px;
+  border-radius: 8px;
+}

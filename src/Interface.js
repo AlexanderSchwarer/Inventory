@@ -11,10 +11,11 @@ class item {
 }
 
 class inventoryItem extends item {
-  constructor(position, id, width, height, image, name) {
+  constructor(position, id, width, height, image, name, colour) {
     super(width, height, image, name);
     this.position = position;
     this.id = id;
+    this.colour = colour;
   }
 }
 
@@ -22,14 +23,48 @@ class inventoryItem extends item {
 const root = document.documentElement;
 const gridBlocks = document.getElementById("gridPage");
 const itemSelector = document.getElementById("itemSelector");
+const contextMenu = document.getElementById("contextMenu");
+const colourMenu = document.getElementById("colour");
+const colourOptions = document.getElementById("colourOptions");
+// colours
+const colourCodes = {
+  red: "#ac2222",
+  orange: "#ac5522",
+  yellow: "#ac8c22",
+  green: "#22ac4b",
+  blue: "#2242ac",
+  purple: "#9122ac",
+  grey: "#ad9d9d"
+};
+const red = document.getElementById("red");
+red.style.backgroundColor = colourCodes.red;
+red.addEventListener("click", setItemColour.bind(this, colourCodes.red));
+const orange = document.getElementById("orange");
+orange.style.backgroundColor = colourCodes.orange;
+orange.addEventListener("click", setItemColour.bind(this, colourCodes.orange));
+const yellow = document.getElementById("yellow");
+yellow.style.backgroundColor = colourCodes.yellow;
+yellow.addEventListener("click", setItemColour.bind(this, colourCodes.yellow));
+const green = document.getElementById("green");
+green.style.backgroundColor = colourCodes.green;
+green.addEventListener("click", setItemColour.bind(this, colourCodes.green));
+const blue = document.getElementById("blue");
+blue.style.backgroundColor = colourCodes.blue;
+blue.addEventListener("click", setItemColour.bind(this, colourCodes.blue));
+const purple = document.getElementById("purple");
+purple.style.backgroundColor = colourCodes.purple;
+purple.addEventListener("click", setItemColour.bind(this, colourCodes.purple));
+const grey = document.getElementById("grey");
+grey.style.backgroundColor = colourCodes.grey;
+grey.addEventListener("click", setItemColour.bind(this, colourCodes.grey));
 
 // global variables
-
 let holding = false;
 let row, column;
 let pos;
 let idCounter = 0;
 let heldItemID;
+let contextItemID;
 let loading = false;
 const gridBlockLength = 2.3;
 const itemListBlock = 12;
@@ -73,8 +108,9 @@ function displayItem(item) {
   itemIcon.src = item.image;
   itemIcon.className = "objectIcon";
   itemSize.className = "tooltip";
-  itemSize.innerHTML = "[" + item.width.toString() + ":" + item.height.toString() + "]";
-  
+  itemSize.innerHTML =
+    "[" + item.width.toString() + ":" + item.height.toString() + "]";
+
   imagePadder.appendChild(itemIcon);
   pickableItem.appendChild(imagePadder);
   pickableItem.appendChild(itemSize);
@@ -112,7 +148,11 @@ for (let i = 0; i < 300; i++) {
 }
 
 root.addEventListener("keydown", deleteItem);
+root.addEventListener("click", closeContextMenu);
+gridBlocks.addEventListener("contextmenu", (Event) => {Event.preventDefault()});
+colourMenu.addEventListener("click", showColourOptions);
 
+// LOAD PROFILE FROM FILE
 function loadItems(profile) {
   loading = true;
   for (let currentItem in inventory) {
@@ -125,14 +165,18 @@ function loadItems(profile) {
   for (let incomingItem in inventory) {
     copyItemFromFile(inventory[incomingItem]);
   }
-  // need to save current items?
   loading = false;
 }
 
+//  SAVE ITEMS TO FILE
 function saveItems(profile) {
-  localStorage.setItem(profile, JSON.stringify({items: inventory, idCount: idCounter}));
+  localStorage.setItem(
+    profile,
+    JSON.stringify({ items: inventory, idCount: idCounter })
+  );
 }
 
+// LOAD ITEM FROM FILE
 function copyItemFromFile(itemType) {
   const item = document.createElement("div");
   const imagePadder = document.createElement("div");
@@ -162,62 +206,76 @@ function copyItemFromFile(itemType) {
   item.style.gridRowStart = itemType.position.r;
   item.style.gridColumnStart = itemType.position.c;
 
+  item.style.backgroundColor = itemType.colour;
+
   item.addEventListener("mousedown", pickupItem.bind(this, itemID));
+  item.addEventListener("contextmenu", openContextMenu.bind(this, itemID));
   inventory[itemID] = new inventoryItem(
     { r: itemType.position.r, c: itemType.position.c },
     itemID,
     itemType.width,
     itemType.height,
     itemType.image,
-    itemType.name
+    itemType.name,
+    itemType.colour
   );
   gridBlocks.appendChild(item);
 }
 
-// copy item from menu
+// COPY ITEM FROM MENU
 function copyItem(itemType) {
-  const item = document.createElement("div");
-  const imagePadder = document.createElement("div");
-  const icon = document.createElement("img");
-  const itemName = document.createElement("div");
+  if (!holding) {
+    const item = document.createElement("div");
+    const imagePadder = document.createElement("div");
+    const icon = document.createElement("img");
+    const itemName = document.createElement("div");
 
-  imagePadder.className = "objectIconPadder";
-  icon.className = "objectIcon";
-  icon.src = itemType.image;
-  item.className = "item";
-  let itemID = itemType.name.concat(idCounter.toString());
-  item.id = itemID;
-  itemName.className = "tooltip";
-  itemName.innerHTML = itemType.name;
+    imagePadder.className = "objectIconPadder";
+    icon.className = "objectIcon";
+    icon.src = itemType.image;
+    item.className = "item";
+    let itemID = itemType.name.concat(idCounter.toString());
+    item.id = itemID;
+    itemName.className = "tooltip";
+    itemName.innerHTML = itemType.name;
 
-  imagePadder.appendChild(icon);
-  item.appendChild(imagePadder);
-  item.appendChild(itemName);
+    imagePadder.appendChild(icon);
+    item.appendChild(imagePadder);
+    item.appendChild(itemName);
 
-  item.style.width = (gridBlockLength * itemType.width - 0.5)
-    .toString()
-    .concat("vw");
-  item.style.height = (gridBlockLength * itemType.height - 0.5)
-    .toString()
-    .concat("vw");
+    item.style.width = (gridBlockLength * itemType.width - 0.5)
+      .toString()
+      .concat("vw");
+    item.style.height = (gridBlockLength * itemType.height - 0.5)
+      .toString()
+      .concat("vw");
 
-  item.addEventListener("mousedown", pickupItem.bind(this, itemID));
-  idCounter++;
+    item.addEventListener("mousedown", pickupItem.bind(this, itemID));
+    item.addEventListener("contextmenu", openContextMenu.bind(this, itemID));
+    idCounter++;
 
-  gridBlocks.appendChild(item);
-  inventory[itemID] = new inventoryItem(
-    { r: -1, c: -1 },
-    itemID,
-    itemType.width,
-    itemType.height,
-    itemType.image,
-    itemType.name
-  );
-  pickupItem(itemID);
+    gridBlocks.appendChild(item);
+    inventory[itemID] = new inventoryItem(
+      { r: -1, c: -1 },
+      itemID,
+      itemType.width,
+      itemType.height,
+      itemType.image,
+      itemType.name,
+      colourCodes.grey
+    );
+    console.log("pickupItem");
+    heldItemID = itemID;
+    item.style.pointerEvents = "none";
+    item.style.borderWidth = "0.5vw";
+    item.style.opacity = "0.6";
+    holding = true;
+  }
 }
 
-function pickupItem(id) {
-  if (!holding) {
+//  PICKUP ITEM
+function pickupItem(id, event) {
+  if (!holding && event.button == 0) {
     console.log("pickupItem");
     heldItemID = id;
     const item = document.getElementById(id);
@@ -228,6 +286,7 @@ function pickupItem(id) {
   }
 }
 
+//  MOVE ITEM
 function moveItem(r, c) {
   if (holding) {
     const item = document.getElementById(heldItemID);
@@ -236,7 +295,42 @@ function moveItem(r, c) {
   }
 }
 
-// deleting items
+//  OPEN CONTEXT MENU
+function openContextMenu(id, event) {
+  event.preventDefault();
+  let x = event.clientX;
+  let y = event.clientY;
+  root.style.setProperty("--mousex", x + "px");
+  root.style.setProperty("--mousey", y + "px");
+  contextMenu.style.opacity = "1";
+  contextMenu.style.pointerEvents = "auto";
+  contextItemID = id;
+}
+
+//  SHOW COLOUR OPTIONS
+function showColourOptions() {
+  colourOptions.style.visibility = "visible";
+  colourOptions.style.opacity = 1;
+}
+
+//  SET ITEM COLOUR
+function setItemColour(colour) {
+  const item = document.getElementById(contextItemID);
+  item.style.backgroundColor = colour;
+  inventory[contextItemID].colour = colour;
+}
+
+//  CLOSE CONTEXT MENU
+function closeContextMenu(event) {
+  if (event.target.parentElement.id != "contextMenu") {
+    contextMenu.style.opacity = 0;
+    contextMenu.style.pointerEvents = "none";
+    colourOptions.style.visibility = "hidden";
+    colourOptions.style.opacity = 0;
+  }
+}
+
+// DELETE ITEM
 function deleteItem(event) {
   if (holding && (event.key == "x" || event.key == "Escape")) {
     console.log("delete");
@@ -249,6 +343,7 @@ function deleteItem(event) {
   }
 }
 
+//  PLACE ITEM
 function placeItem(r, c) {
   if (holding) {
     console.log(r.toString().concat(",", c.toString()));
