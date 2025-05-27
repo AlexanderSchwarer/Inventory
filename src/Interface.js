@@ -26,37 +26,29 @@ const itemSelector = document.getElementById("itemSelector");
 const contextMenu = document.getElementById("contextMenu");
 const colourMenu = document.getElementById("colour");
 const colourOptions = document.getElementById("colourOptions");
+const colourOptionText = document.getElementById("colourOptionText");
+
 // colours
 const colourCodes = {
-  red: "#ac2222",
-  orange: "#ac5522",
-  yellow: "#ac8c22",
-  green: "#22ac4b",
-  blue: "#2242ac",
-  purple: "#9122ac",
-  grey: "#ad9d9d"
+  red: "#FF7369",
+  orange: "#ffa344",
+  yellow: "#FFDC49",
+  green: "#4DAB9A",
+  blue: "#529CCA",
+  purple: "#9A6DD7",
+  pink: "#E255A1",
+  grey: "#d9d9d9",
 };
-const red = document.getElementById("red");
-red.style.backgroundColor = colourCodes.red;
-red.addEventListener("click", setItemColour.bind(this, colourCodes.red));
-const orange = document.getElementById("orange");
-orange.style.backgroundColor = colourCodes.orange;
-orange.addEventListener("click", setItemColour.bind(this, colourCodes.orange));
-const yellow = document.getElementById("yellow");
-yellow.style.backgroundColor = colourCodes.yellow;
-yellow.addEventListener("click", setItemColour.bind(this, colourCodes.yellow));
-const green = document.getElementById("green");
-green.style.backgroundColor = colourCodes.green;
-green.addEventListener("click", setItemColour.bind(this, colourCodes.green));
-const blue = document.getElementById("blue");
-blue.style.backgroundColor = colourCodes.blue;
-blue.addEventListener("click", setItemColour.bind(this, colourCodes.blue));
-const purple = document.getElementById("purple");
-purple.style.backgroundColor = colourCodes.purple;
-purple.addEventListener("click", setItemColour.bind(this, colourCodes.purple));
-const grey = document.getElementById("grey");
-grey.style.backgroundColor = colourCodes.grey;
-grey.addEventListener("click", setItemColour.bind(this, colourCodes.grey));
+for (let colour in colourCodes) {
+  const colourButton = document.createElement("div");
+  colourButton.className = "colour";
+  colourButton.style.backgroundColor = colourCodes[colour];
+  colourButton.addEventListener(
+    "click",
+    setItemColour.bind(this, colourCodes[colour])
+  );
+  colourOptions.appendChild(colourButton);
+}
 
 // global variables
 let holding = false;
@@ -65,6 +57,7 @@ let pos;
 let idCounter = 0;
 let heldItemID;
 let contextItemID;
+let colourMenuOpen = false;
 let loading = false;
 const gridBlockLength = 2.3;
 const itemListBlock = 12;
@@ -74,29 +67,22 @@ root.style.setProperty("--blockSize", gridBlockLength + "vw");
 
 // Populating Item menu -- to be moved to a separate file for scalability
 let items = [];
-let dagger = new item(1, 2, "images/dagger.svg", "dagger");
-let club = new item(1, 3, "images/Club.svg", "club");
-let greatclub = new item(1, 5, "images/Greatclub.svg", "greatclub");
-let handaxe = new item(1, 2, "images/Handaxe.svg", "handaxe");
-let shortsword = new item(1, 3, "images/ArmingSword.svg", "ArmingSword");
-let scimitar = new item(1, 3, "images/scimitar.svg", "scimitar");
-let longsword = new item(1, 4, "images/longsword.svg", "longsword");
-let whip = new item(2, 2, "images/Whip.svg", "whip");
 
-items.push(dagger);
-items.push(club);
-items.push(greatclub);
-items.push(shortsword);
-items.push(scimitar);
-items.push(longsword);
-items.push(whip);
-items.push(handaxe);
+items.push(new item(1, 2, "images/dagger.svg", "dagger"));
+items.push(new item(1, 3, "images/Club.svg", "club"));
+items.push(new item(2, 5, "images/Greatclub.svg", "greatclub"));
+items.push(new item(1, 5, "images/Javelin.svg", "javelin"));
+items.push(new item(1, 2, "images/Handaxe.svg", "handaxe"));
+items.push(new item(1, 3, "images/ArmingSword.svg", "ArmingSword"));
+items.push(new item(1, 3, "images/scimitar.svg", "scimitar"));
+items.push(new item(1, 4, "images/longsword.svg", "longsword"));
+items.push(new item(2, 2, "images/Whip.svg", "whip"));
 
 let inventory = {};
 
 const slector = document.getElementById("itemSelector");
 items.forEach(displayItem);
-
+// Displaying items in the item selector
 function displayItem(item) {
   const pickableItem = document.createElement("div");
   const imagePadder = document.createElement("div");
@@ -149,7 +135,13 @@ for (let i = 0; i < 300; i++) {
 
 root.addEventListener("keydown", deleteItem);
 root.addEventListener("click", closeContextMenu);
-gridBlocks.addEventListener("contextmenu", (Event) => {Event.preventDefault()});
+// right-click deletes held items
+gridBlocks.addEventListener("contextmenu", (Event) => {
+  Event.preventDefault();
+  if (holding) {
+    deleteItem(Event);
+  }
+});
 colourMenu.addEventListener("click", showColourOptions);
 
 // LOAD PROFILE FROM FILE
@@ -190,6 +182,12 @@ function copyItemFromFile(itemType) {
   let itemID = itemType.id;
   item.id = itemID;
   itemName.className = "tooltip";
+  itemName.spellcheck = "false";
+  itemName.id = itemID.concat("Name");
+  itemName.contentEditable = "true";
+  itemName.addEventListener("blur", () => {
+    inventory[itemID].name = itemName.innerHTML;
+  });
   itemName.innerHTML = itemType.name;
 
   imagePadder.appendChild(icon);
@@ -237,6 +235,12 @@ function copyItem(itemType) {
     let itemID = itemType.name.concat(idCounter.toString());
     item.id = itemID;
     itemName.className = "tooltip";
+    itemName.spellcheck = "false";
+    itemName.id = itemID.concat("Name");
+    itemName.contentEditable = "true";
+    itemName.addEventListener("blur", () => {
+      inventory[itemID].name = itemName.innerHTML;
+    });
     itemName.innerHTML = itemType.name;
 
     imagePadder.appendChild(icon);
@@ -266,22 +270,20 @@ function copyItem(itemType) {
     );
     console.log("pickupItem");
     heldItemID = itemID;
-    item.style.pointerEvents = "none";
-    item.style.borderWidth = "0.5vw";
-    item.style.opacity = "0.6";
+    item.classList.add("pickup");
     holding = true;
   }
 }
 
 //  PICKUP ITEM
 function pickupItem(id, event) {
-  if (!holding && event.button == 0) {
+  if (!holding && event.button == 0 && event.target.className != "tooltip") {
     console.log("pickupItem");
+    console.log(event.target.className);
     heldItemID = id;
     const item = document.getElementById(id);
-    item.style.pointerEvents = "none";
-    item.style.borderWidth = "0.5vw";
-    item.style.opacity = "0.6";
+    item.classList.remove("place");
+    item.classList.add("pickup");
     holding = true;
   }
 }
@@ -302,15 +304,25 @@ function openContextMenu(id, event) {
   let y = event.clientY;
   root.style.setProperty("--mousex", x + "px");
   root.style.setProperty("--mousey", y + "px");
-  contextMenu.style.opacity = "1";
-  contextMenu.style.pointerEvents = "auto";
+  contextMenu.classList.remove("close");
+  contextMenu.classList.add("open");
   contextItemID = id;
 }
 
 //  SHOW COLOUR OPTIONS
 function showColourOptions() {
-  colourOptions.style.visibility = "visible";
-  colourOptions.style.opacity = 1;
+  if (!colourMenuOpen) {
+    colourOptions.classList.remove("close");
+    colourOptions.classList.add("open");
+    // colourOptions.style.opacity = "1";
+    colourMenuOpen = true;
+    colourOptionText.innerHTML = "COLOUR &#11207";
+  } else {
+    colourOptions.classList.remove("open");
+    colourOptions.classList.add("close");
+    colourMenuOpen = false;
+    colourOptionText.innerHTML = "COLOUR &#11208";
+  }
 }
 
 //  SET ITEM COLOUR
@@ -320,19 +332,32 @@ function setItemColour(colour) {
   inventory[contextItemID].colour = colour;
 }
 
+//RENAME ITEM
+function renameItem() {
+  console.log("renameItem");
+  let id = contextItemID.concat("Name");
+  const itemName = document.getElementById(id);
+  itemName.focus();
+  contextMenu.classList.remove("open");
+  contextMenu.classList.add("close");
+  colourOptionText.innerHTML = "COLOUR &#11208";
+}
+
 //  CLOSE CONTEXT MENU
 function closeContextMenu(event) {
   if (event.target.parentElement.id != "contextMenu") {
-    contextMenu.style.opacity = 0;
-    contextMenu.style.pointerEvents = "none";
-    colourOptions.style.visibility = "hidden";
-    colourOptions.style.opacity = 0;
+    contextMenu.classList.remove("open");
+    contextMenu.classList.add("close");
+    colourOptionText.innerHTML = "COLOUR &#11208";
   }
 }
 
 // DELETE ITEM
 function deleteItem(event) {
-  if (holding && (event.key == "x" || event.key == "Escape")) {
+  if (
+    holding &&
+    (event.key == "x" || event.key == "Escape" || event.button == 2)
+  ) {
     console.log("delete");
     const item = document.getElementById(heldItemID);
     item.removeEventListener("mousedown", pickupItem);
@@ -353,9 +378,8 @@ function placeItem(r, c) {
     console.log("placeItem");
     item.style.gridRowStart = parseInt(r);
     item.style.gridColumnStart = parseInt(c);
-    item.style.pointerEvents = "auto";
-    item.style.borderWidth = "0.25vw";
-    item.style.opacity = "1";
+    item.classList.remove("pickup");
+    item.classList.add("place");
     inventory[heldItemID].position.r = r;
     inventory[heldItemID].position.c = c;
     holding = false;

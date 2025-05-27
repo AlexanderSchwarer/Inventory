@@ -53,7 +53,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #ad9d9d;
+  background-color: #d9d9d9;
   border-style: outset;
   border-width: 0.25vw;
   border-color: black;
@@ -113,8 +113,9 @@ body {
 }
 
 .item .tooltip {
-  visibility: hidden;
+  opacity: 0;
   width: auto;
+  min-width: 50px;
   background-color: #b3b3b3;
   text-align: center;
   border-radius: 6px;
@@ -122,12 +123,16 @@ body {
   position: absolute;
   z-index: 1;
   top: 105%;
-  opacity: 0;
   transition: opacity 0.3s;
   font-family: "Courier New", Courier, monospace;
 }
 
 .item:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.item .tooltip:focus {
   visibility: visible;
   opacity: 1;
 }
@@ -149,15 +154,14 @@ button {
   padding-top: 3px;
   padding-bottom: 3px;
   position: absolute;
-  opacity: 1;
   top: var(--mousey);
   left: var(--mousex);
   opacity: 0;
 }
 
-.contextMenu .option {
+/*.contextMenu*/ .option {
   background-color: #222222;
-  width: 100px;
+  width: 85px;
   height: 30px;
   line-height: 30px;
   color: whitesmoke;
@@ -167,27 +171,58 @@ button {
   user-select: none;
 }
 
-.contextMenu .option:hover {
+/*.contextMenu .option*/ .optionText {
+  pointer-events: none;
+}
+
+/*.contextMenu*/ .option:hover {
   background-color: #3f3f3f;
 }
 
-.contextMenu .option .colourOption {
+/* .contextMenu .option */ .colourOption { 
   display: grid;
-  grid-template-columns: repeat(7, 18px);
-  width: 126px;
+  grid-template-columns: repeat(8, 18px);
+  width: fit-content;
   height: 30px;
   padding-right: 3px;
-  translate: 104px -30px;
+  translate: 89px -30px;
   background-color: #222222;
-  visibility: hidden;
   opacity: 0;
   border-radius: 0px 4px 4px 0px;
 }
 
-.contextMenu .option .colourOption .colour {
+/*.contextMenu .option .colourOption*/ .colour {
   justify-self: center;
   align-self: center;
   width: 15px;
   height: 20px;
   border-radius: 8px;
 }
+/*.contextMenu .option .colourOption*/ .colour:hover {
+  width: 16px;
+  height: 22px;
+}
+
+.close {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pickup {
+  pointer-events: none;
+  border-width: 0.5vw;
+  opacity: 0.6;
+}
+
+.place {
+  pointer-events: auto;
+  border-width: 0.25vw;
+  opacity: 1;
+}
+
+
