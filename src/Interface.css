@@ -130,11 +130,13 @@ body {
   top: 105%;
   transition: opacity 0.3s;
   font-family: "Courier New", Courier, monospace;
+  pointer-events: none;
 }
 
 .item:hover .tooltip {
   visibility: visible;
   opacity: 1;
+  pointer-events: auto;
 }
 
 .item .tooltip:focus {
