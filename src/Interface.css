@@ -61,6 +61,11 @@ body {
   border-radius: 1vw;
 }
 
+.rotate {
+  transform-origin: top left;
+  transform: rotate(-90deg) translate(-100%, 0%);
+}
+
 .objectIconPadder {
   width: 90%;
   height: 90%;

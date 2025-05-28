@@ -11,11 +11,12 @@ class item {
 }
 
 class inventoryItem extends item {
-  constructor(position, id, width, height, image, name, colour) {
+  constructor(position, id, width, height, image, name, colour, rotated) {
     super(width, height, image, name);
     this.position = position;
     this.id = id;
     this.colour = colour;
+    this.rotated = rotated || false;
   }
 }
 
@@ -133,7 +134,9 @@ for (let i = 0; i < 300; i++) {
   gridBlocks.appendChild(gridSpace);
 }
 
+// root event listeners
 root.addEventListener("keydown", deleteItem);
+root.addEventListener("keydown", rotateItem);
 root.addEventListener("click", closeContextMenu);
 // right-click deletes held items
 gridBlocks.addEventListener("contextmenu", (Event) => {
@@ -215,9 +218,23 @@ function copyItemFromFile(itemType) {
     itemType.height,
     itemType.image,
     itemType.name,
-    itemType.colour
+    itemType.colour,
+    itemType.rotated
   );
   gridBlocks.appendChild(item);
+
+  if (itemType.rotated) {
+    let width = item.style.width;
+    let height = item.style.height;
+    item.style.width = height;
+    item.style.height = width;
+
+    width = width.slice(0, width.length-2);
+    height = height.slice(0, height.length-2);
+    icon.style.width = ((width/height)*100).toString().concat("%");
+    icon.style.height = ((height/width)*100).toString().concat("%");
+    icon.classList.add("rotate");
+  }
 }
 
 // COPY ITEM FROM MENU
@@ -285,6 +302,32 @@ function pickupItem(id, event) {
     item.classList.remove("place");
     item.classList.add("pickup");
     holding = true;
+  }
+}
+
+function rotateItem(event) {
+  if (holding && (event.key == "r" || event.key == "R")) {
+    const item = document.getElementById(heldItemID);
+    let width = item.style.width;
+    let height = item.style.height;
+    item.style.width = height;
+    item.style.height = width;
+    // we don't change height and width in inventory, when items are loaded they start unrotated.
+    // rotate the image
+    const image = item.querySelector(".objectIcon");
+
+    if (image.classList.contains("rotate")) {
+      image.classList.remove("rotate");
+      image.style.width = "100%";
+      image.style.height = "100%";
+    } else {
+      width = width.slice(0, width.length-2);
+      height = height.slice(0, height.length-2);
+      image.style.width = ((width/height)*100).toString().concat("%");
+      image.style.height = ((height/width)*100).toString().concat("%");
+      image.classList.add("rotate");
+      inventory[heldItemID].rotated = true;
+    }
   }
 }
 
