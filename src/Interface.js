@@ -28,6 +28,8 @@ const contextMenu = document.getElementById("contextMenu");
 const colourMenu = document.getElementById("colour");
 const colourOptions = document.getElementById("colourOptions");
 const colourOptionText = document.getElementById("colourOptionText");
+const maxWeight = document.getElementById("maxWeight");
+const curWeight = document.getElementById("curWeight");
 
 // colours
 const colourCodes = {
@@ -60,11 +62,16 @@ let heldItemID;
 let contextItemID;
 let colourMenuOpen = false;
 let loading = false;
+let maxWeightValue = 120;
+let curWeightValue = 0;
 const gridBlockLength = 2.3;
-const itemListBlock = 12;
+const itemListBlock = 7.2;
 // constant css variables are set to the above constant values
 root.style.setProperty("--itemListBlocks", itemListBlock + "vw");
 root.style.setProperty("--blockSize", gridBlockLength + "vw");
+
+maxWeight.innerHTML = maxWeightValue.toString();
+curWeight.innerHTML = curWeightValue.toString();
 
 // Populating Item menu -- to be moved to a separate file for scalability
 let items = [];
@@ -78,6 +85,10 @@ items.push(new item(1, 3, "images/ArmingSword.svg", "ArmingSword"));
 items.push(new item(1, 3, "images/scimitar.svg", "scimitar"));
 items.push(new item(1, 4, "images/longsword.svg", "longsword"));
 items.push(new item(2, 2, "images/Whip.svg", "whip"));
+
+for (let i = 0; i < 20; i++) {
+  items.push(new item(2, 2, "images/Whip.svg", "whip"));
+}
 
 let inventory = {};
 
@@ -96,7 +107,12 @@ function displayItem(item) {
   itemIcon.className = "objectIcon";
   itemSize.className = "tooltip";
   itemSize.innerHTML =
-    "[" + item.width.toString() + ":" + item.height.toString() + "]";
+    item.name +
+    "[" +
+    item.width.toString() +
+    ":" +
+    item.height.toString() +
+    "]";
 
   imagePadder.appendChild(itemIcon);
   pickableItem.appendChild(imagePadder);
@@ -150,13 +166,19 @@ colourMenu.addEventListener("click", showColourOptions);
 // LOAD PROFILE FROM FILE
 function loadItems(profile) {
   loading = true;
+  // clear the grid
   for (let currentItem in inventory) {
     const item = document.getElementById(currentItem);
     item.removeEventListener("mousedown", pickupItem);
     item.remove();
   }
+  // populate
   inventory = JSON.parse(localStorage.getItem(profile)).items;
   idCounter = JSON.parse(localStorage.getItem(profile)).idCount;
+  maxWeightValue = JSON.parse(localStorage.getItem(profile)).maxWeight;
+  curWeightValue = JSON.parse(localStorage.getItem(profile)).curWeight;
+  maxWeight.innerHTML = maxWeightValue.toString();
+  curWeight.innerHTML = curWeightValue.toString();
   for (let incomingItem in inventory) {
     copyItemFromFile(inventory[incomingItem]);
   }
@@ -167,7 +189,12 @@ function loadItems(profile) {
 function saveItems(profile) {
   localStorage.setItem(
     profile,
-    JSON.stringify({ items: inventory, idCount: idCounter })
+    JSON.stringify({
+      items: inventory,
+      idCount: idCounter,
+      maxWeight: maxWeightValue,
+      curWeight: curWeightValue,
+    })
   );
 }
 
@@ -229,10 +256,10 @@ function copyItemFromFile(itemType) {
     item.style.width = height;
     item.style.height = width;
 
-    width = width.slice(0, width.length-2);
-    height = height.slice(0, height.length-2);
-    icon.style.width = ((width/height)*100).toString().concat("%");
-    icon.style.height = ((height/width)*100).toString().concat("%");
+    width = width.slice(0, width.length - 2);
+    height = height.slice(0, height.length - 2);
+    icon.style.width = ((width / height) * 100).toString().concat("%");
+    icon.style.height = ((height / width) * 100).toString().concat("%");
     icon.classList.add("rotate");
   }
 }
@@ -289,6 +316,14 @@ function copyItem(itemType) {
     heldItemID = itemID;
     item.classList.add("pickup");
     holding = true;
+
+    // update current weight
+    curWeightValue += itemType.area;
+    curWeight.innerHTML = curWeightValue.toString();
+    if (curWeightValue > maxWeightValue) {
+      curWeight.classList.add("overweight");
+      curWeight.style.color = "red";
+    }
   }
 }
 
@@ -321,10 +356,10 @@ function rotateItem(event) {
       image.style.width = "100%";
       image.style.height = "100%";
     } else {
-      width = width.slice(0, width.length-2);
-      height = height.slice(0, height.length-2);
-      image.style.width = ((width/height)*100).toString().concat("%");
-      image.style.height = ((height/width)*100).toString().concat("%");
+      width = width.slice(0, width.length - 2);
+      height = height.slice(0, height.length - 2);
+      image.style.width = ((width / height) * 100).toString().concat("%");
+      image.style.height = ((height / width) * 100).toString().concat("%");
       image.classList.add("rotate");
       inventory[heldItemID].rotated = true;
     }
@@ -402,6 +437,14 @@ function deleteItem(event) {
     (event.key == "x" || event.key == "Escape" || event.button == 2)
   ) {
     console.log("delete");
+    // update current weight
+    curWeightValue -= inventory[heldItemID].area;
+    curWeight.innerHTML = curWeightValue.toString();
+    if (curWeightValue <= maxWeightValue) {
+      curWeight.classList.remove("overweight");
+      curWeight.style.color = "#d9d9d9";
+    }
+    // delete element
     const item = document.getElementById(heldItemID);
     item.removeEventListener("mousedown", pickupItem);
     item.remove();

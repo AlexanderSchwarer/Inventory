@@ -16,6 +16,7 @@ body {
   align-items: flex-start;
   background-color: rgb(112, 112, 112);
   height: 95%;
+  width: 99.5%;
   padding-top: 1%;
   padding-bottom: 1%;
 }
@@ -43,10 +44,59 @@ body {
 }
 
 .gridContainer {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   background-color: rgb(112, 112, 112);
   height: 100%;
   width: 100%;
+}
+
+.gridContainer .characterInfoFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(17, 17, 17);
+  width: 96%;
+  height: 10%;
+  border: #000000 outset 0.2vw;
+  border-radius: 0.5vw;
+}
+
+.gridContainer .characterInfoFooter .infoBlock .portrait {
+  height: 90%;
+  object-fit: contain;
+  border: rgb(89, 194, 89), 0.2vw groove;
+  border-radius: 1vw;
+  margin-right: 6%;
+  margin-left: 3%;
+}
+
+.gridContainer .characterInfoFooter .infoBlock {
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 20%;
+}
+
+.gridContainer .characterInfoFooter .infoBlock button {
+  font-size: 120%;
+  font-family: Garamond, "Times New Roman", Times, serif;
+  font-weight: bold;
+}
+
+.gridContainer .characterInfoFooter .infoBlock h3 {
+  color: #d9d9d9;
+}
+
+.gridContainer .characterInfoFooter .infoBlock h3 .overweight {
+  color: #e64b4b;
+}
+
+.gridContainer .characterInfoFooter .infoBlock h2 {
+  color: #d9d9d9;
 }
 
 .item {
@@ -54,9 +104,9 @@ body {
   justify-content: center;
   align-items: center;
   background-color: #d9d9d9;
-  border-style: outset;
+  border-style: solid;
   border-width: 0.25vw;
-  border-color: black;
+  border-color: #3f3f3f;
   position: relative;
   border-radius: 1vw;
 }
@@ -91,7 +141,7 @@ body {
 .itemPage {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   background-color: rgb(112, 112, 112);
   width: 100%;
@@ -104,7 +154,7 @@ body {
   padding-bottom: 5%;
   row-gap: 3vw;
   column-gap: 0vw;
-  grid-template-columns: repeat(3, var(--itemListBlocks));
+  grid-template-columns: repeat(5, var(--itemListBlocks));
   grid-template-rows: repeat(auto-fit, var(--itemListBlocks));
   white-space: wrap;
   justify-content: space-around;
@@ -112,9 +162,19 @@ body {
   align-items: center;
   background-color: #3f3f3f;
   overflow: auto;
-  height: 50%;
   width: 90%;
   border: 0.5svw ridge black;
+}
+
+.itemPage .buttonMenu {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1vw;
+  background-color: rgb(112, 112, 112);
+  width: 90%;
+  height: 10%;
+  background-color: rgb(100, 100, 100);
 }
 
 .item .tooltip {
@@ -144,10 +204,9 @@ body {
   opacity: 1;
 }
 
-button {
-  width: 90%;
-  height: 9%;
-  font-size: 200%;
+.itemPage button {
+  width: 25%;
+  font-size: 200%; 
   font-family: Garamond, "Times New Roman", Times, serif;
   font-weight: bold;
 }
@@ -164,6 +223,7 @@ button {
   top: var(--mousey);
   left: var(--mousex);
   opacity: 0;
+  pointer-events: none;
 }
 
 /*.contextMenu*/ .option {
