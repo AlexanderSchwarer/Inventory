@@ -30,6 +30,7 @@ const colourOptions = document.getElementById("colourOptions");
 const colourOptionText = document.getElementById("colourOptionText");
 const maxWeight = document.getElementById("maxWeight");
 const curWeight = document.getElementById("curWeight");
+const curWeightBar = document.getElementById("curWeightBar");
 
 // colours
 const colourCodes = {
@@ -64,7 +65,8 @@ let colourMenuOpen = false;
 let loading = false;
 let maxWeightValue = 10;
 let curWeightValue = 0;
-const gridBlockLength = 2.3 /*4.6*/;
+adjustWeight();
+const gridBlockLength = 2.3; /*4.6*/
 const itemListBlock = 7.2;
 // constant css variables are set to the above constant values
 root.style.setProperty("--itemListBlocks", itemListBlock + "vw");
@@ -113,11 +115,7 @@ function displayItem(item) {
   itemIcon.className = "objectIcon";
   itemSize.className = "sizeTooltip";
   itemSize.innerHTML =
-    "[" +
-    item.width.toString() +
-    ":" +
-    item.height.toString() +
-    "]";
+    "[" + item.width.toString() + ":" + item.height.toString() + "]";
 
   itemName.className = "tooltip";
   itemName.spellcheck = "false";
@@ -189,9 +187,7 @@ function loadItems(profile) {
   curWeightValue = JSON.parse(localStorage.getItem(profile)).curWeight;
   maxWeight.innerHTML = maxWeightValue.toString();
   curWeight.innerHTML = curWeightValue.toString();
-  if (curWeightValue > maxWeightValue) {
-    curWeight.classList.add("overweight");
-  }
+  adjustWeight();
   for (let incomingItem in inventory) {
     copyItemFromFile(inventory[incomingItem]);
   }
@@ -333,9 +329,7 @@ function copyItem(itemType) {
     // update current weight
     curWeightValue += itemType.area;
     curWeight.innerHTML = curWeightValue.toString();
-    if (curWeightValue > maxWeightValue) {
-      curWeight.classList.add("overweight");
-    }
+    adjustWeight();
   }
 }
 
@@ -452,9 +446,7 @@ function deleteItem(event) {
     // update current weight
     curWeightValue -= inventory[heldItemID].area;
     curWeight.innerHTML = curWeightValue.toString();
-    if (curWeightValue <= maxWeightValue) {
-      curWeight.classList.remove("overweight");
-    }
+    adjustWeight();
     // delete element
     const item = document.getElementById(heldItemID);
     item.removeEventListener("mousedown", pickupItem);
@@ -481,5 +473,27 @@ function placeItem(r, c) {
     inventory[heldItemID].position.c = c;
     holding = false;
     heldItemID = "";
+  }
+}
+
+// ADJUST WEIGHT
+function adjustWeight() {
+  if (curWeightValue > maxWeightValue) {
+    curWeight.classList.add("overweight");
+    curWeightBar.style.width = "100%";
+    curWeightBar.style.backgroundColor = "rgb(126, 20, 20)";
+  } else {
+    curWeightBar.style.width = ((curWeightValue / maxWeightValue) * 100)
+      .toString()
+      .concat("%");
+    let shift = (curWeightValue / maxWeightValue) * 40 + 30;
+    curWeightBar.style.backgroundColor =
+      "rgb(" + shift.toString() + "," + (100 - shift).toString() + ",30)";
+    curWeight.classList.remove("overweight");
+    if ((curWeightValue / maxWeightValue) * 100 < 10) {
+      curWeight.classList.add("underweight");
+    } else {
+      curWeight.classList.remove("underweight");
+    }
   }
 }

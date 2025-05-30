@@ -7,7 +7,7 @@
 
 body {
   background-color: rgb(112, 112, 112);
-  height: 97svh; /*still don't know why this works*/
+  height: 97svh; 
 }
 
 .book {
@@ -62,7 +62,7 @@ body {
   width: 96%;
   height: 10%;
   border: #000000 outset 0.2vw;
-  border-radius: 0.5vw;
+  border-radius: 0.5vw 1vw 1vw 0.5vw;
 }
 
 .gridContainer .characterInfoFooter .infoBlock .portrait {
@@ -70,8 +70,6 @@ body {
   object-fit: contain;
   border: rgb(89, 194, 89), 0.2vw groove;
   border-radius: 1vw;
-  margin-right: 6%;
-  margin-left: 3%;
 }
 
 .gridContainer .characterInfoFooter .infoBlock {
@@ -80,6 +78,36 @@ body {
   align-items: center;
   justify-content: space-around;
   width: 20%;
+}
+
+.gridContainer .characterInfoFooter .infoBlock.curWeight {
+  width: 40%;
+}
+
+.gridContainer .characterInfoFooter .infoBlock.curWeight .maxWeightBar {
+  background-color: #bdbdbd;
+  height: 70%;
+  width: 60%;
+  display: flex;
+  align-items: center;
+  border-radius: 0.2vw 0.7vw 0.7vw 0.2vw;
+}
+
+.gridContainer .characterInfoFooter .infoBlock.curWeight .maxWeightBar .curWeightBar {
+  background-color: rgb(38, 70, 35);
+  height: 100%;
+  width: 0%;
+  display: flex;
+  align-items: center;
+}
+
+.gridContainer .characterInfoFooter .infoBlock.curWeight .maxWeightBar .curWeightBar h3 {
+  color: rgb(221, 221, 221);
+  margin: 0.4vw;
+}
+
+.gridContainer .characterInfoFooter .infoBlock.title {
+  width: 25%;
 }
 
 .gridContainer .characterInfoFooter .infoBlock button {
@@ -92,8 +120,12 @@ body {
   color: #d9d9d9;
 }
 
-.gridContainer .characterInfoFooter .infoBlock h3.overweight {
-  color: #ff6969;
+.gridContainer .characterInfoFooter .infoBlock.curWeight .maxWeightBar .curWeightBar h3.overweight {
+  color: #000000;
+}
+
+.gridContainer .characterInfoFooter .infoBlock.curWeight .maxWeightBar .curWeightBar h3.underweight {
+  color: #000000;
 }
 
 .gridContainer .characterInfoFooter .infoBlock h2 {
@@ -138,7 +170,6 @@ body {
   width: 100%;
   height: 100%;
   position: relative;
-  z-index: 1;
 }
 
 .itemList {
@@ -181,6 +212,7 @@ body {
   border-color: #3f3f3f;
   position: relative;
   border-radius: 1vw;
+  overflow: visible;
 }
 
 .item .tooltip {
