@@ -62,9 +62,9 @@ let heldItemID;
 let contextItemID;
 let colourMenuOpen = false;
 let loading = false;
-let maxWeightValue = 120;
+let maxWeightValue = 10;
 let curWeightValue = 0;
-const gridBlockLength = 2.3;
+const gridBlockLength = 2.3 /*4.6*/;
 const itemListBlock = 7.2;
 // constant css variables are set to the above constant values
 root.style.setProperty("--itemListBlocks", itemListBlock + "vw");
@@ -81,14 +81,19 @@ items.push(new item(1, 3, "images/Club.svg", "club"));
 items.push(new item(2, 5, "images/Greatclub.svg", "greatclub"));
 items.push(new item(1, 5, "images/Javelin.svg", "javelin"));
 items.push(new item(1, 2, "images/Handaxe.svg", "handaxe"));
+items.push(new item(1, 2, "images/lightHammer.svg", "lightHammer"));
+items.push(new item(1, 2, "images/lightHammer.svg", "mace"));
+items.push(new item(1, 2, "images/lightHammer.svg", "quarterstaff"));
+items.push(new item(1, 2, "images/lightHammer.svg", "sickle"));
+items.push(new item(1, 2, "images/lightHammer.svg", "spear"));
+items.push(new item(1, 2, "images/lightHammer.svg", "lightCrossbow"));
+items.push(new item(1, 2, "images/lightHammer.svg", "dart"));
+items.push(new item(1, 2, "images/lightHammer.svg", "shortbow"));
+items.push(new item(1, 2, "images/lightHammer.svg", "sling"));
 items.push(new item(1, 3, "images/ArmingSword.svg", "ArmingSword"));
 items.push(new item(1, 3, "images/scimitar.svg", "scimitar"));
 items.push(new item(1, 4, "images/longsword.svg", "longsword"));
 items.push(new item(2, 2, "images/Whip.svg", "whip"));
-
-for (let i = 0; i < 20; i++) {
-  items.push(new item(2, 2, "images/Whip.svg", "whip"));
-}
 
 let inventory = {};
 
@@ -100,23 +105,28 @@ function displayItem(item) {
   const imagePadder = document.createElement("div");
   const itemIcon = document.createElement("img");
   const itemSize = document.createElement("div");
+  const itemName = document.createElement("div");
 
   pickableItem.className = "item";
   imagePadder.className = "objectIconPadder";
   itemIcon.src = item.image;
   itemIcon.className = "objectIcon";
-  itemSize.className = "tooltip";
+  itemSize.className = "sizeTooltip";
   itemSize.innerHTML =
-    item.name +
     "[" +
     item.width.toString() +
     ":" +
     item.height.toString() +
     "]";
 
+  itemName.className = "tooltip";
+  itemName.spellcheck = "false";
+  itemName.innerHTML = item.name;
+
   imagePadder.appendChild(itemIcon);
   pickableItem.appendChild(imagePadder);
   pickableItem.appendChild(itemSize);
+  pickableItem.appendChild(itemName);
 
   if (item.width > item.height) {
     pickableItem.style.width = itemListBlock.toString().concat("vw");
@@ -179,6 +189,9 @@ function loadItems(profile) {
   curWeightValue = JSON.parse(localStorage.getItem(profile)).curWeight;
   maxWeight.innerHTML = maxWeightValue.toString();
   curWeight.innerHTML = curWeightValue.toString();
+  if (curWeightValue > maxWeightValue) {
+    curWeight.classList.add("overweight");
+  }
   for (let incomingItem in inventory) {
     copyItemFromFile(inventory[incomingItem]);
   }
@@ -322,7 +335,6 @@ function copyItem(itemType) {
     curWeight.innerHTML = curWeightValue.toString();
     if (curWeightValue > maxWeightValue) {
       curWeight.classList.add("overweight");
-      curWeight.style.color = "red";
     }
   }
 }
@@ -442,7 +454,6 @@ function deleteItem(event) {
     curWeight.innerHTML = curWeightValue.toString();
     if (curWeightValue <= maxWeightValue) {
       curWeight.classList.remove("overweight");
-      curWeight.style.color = "#d9d9d9";
     }
     // delete element
     const item = document.getElementById(heldItemID);
