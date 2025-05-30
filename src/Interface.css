@@ -263,9 +263,13 @@ body {
 
 .itemPage button {
   width: 25%;
+  height: 100%;
   font-size: 200%; 
   font-family: Garamond, "Times New Roman", Times, serif;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .contextMenu {
