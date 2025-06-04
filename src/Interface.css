@@ -215,6 +215,15 @@ body {
   overflow: visible;
 }
 
+.item:hover {
+  z-index: 1;
+}
+
+.itemList .item:hover {
+  transition: scale 0.14s ease-in-out;
+  scale: 1.05;
+}
+
 .item .tooltip {
   opacity: 0;
   width: auto;
@@ -319,6 +328,31 @@ body {
   border-radius: 0px 4px 4px 0px;
 }
 
+/*.contextMenu .option*/ .quickInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  word-wrap: break-word;
+  max-width: 500%;
+  height: auto;
+  padding-right: 10%;
+  padding-left: 10%;
+  translate: 89px -30px;
+  background-color: #222222;
+  opacity: 0;
+  border-radius: 0px 4px 4px 0px;
+  color: whitesmoke;
+  font-size: 80%;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.contextMenu .option .quickInfo:hover {
+  transition: scale 0.14s ease-in-out, transform 0.14s ease-in-out;
+  scale: 1.1;
+  transform: translateX(4.5%); 
+}
+
 /*.contextMenu .option .colourOption*/ .colour {
   justify-self: center;
   align-self: center;
@@ -326,9 +360,10 @@ body {
   height: 20px;
   border-radius: 8px;
 }
+
 /*.contextMenu .option .colourOption*/ .colour:hover {
-  width: 16px;
-  height: 22px;
+  transition: scale 0.1s ease-out;
+  scale: 1.2;
 }
 
 .close {

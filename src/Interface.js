@@ -1,9 +1,11 @@
 class item {
-  constructor(width, height, image, name) {
+  constructor(width, height, image, name, quickInfo="none", details="") {
     this.width = width;
     this.height = height;
     this.image = image;
     this.name = name;
+    this.quickInfo = quickInfo; // Short description or stats
+    this.details = details; // Detailed description
   }
   get area() {
     return this.height * this.width;
@@ -11,8 +13,8 @@ class item {
 }
 
 class inventoryItem extends item {
-  constructor(position, id, width, height, image, name, colour, rotated) {
-    super(width, height, image, name);
+  constructor(position, id, width, height, image, name, quickInfo, details, colour, rotated) {
+    super(width, height, image, name, quickInfo, details);
     this.position = position;
     this.id = id;
     this.colour = colour;
@@ -26,8 +28,11 @@ const gridBlocks = document.getElementById("gridPage");
 const itemSelector = document.getElementById("itemSelector");
 const contextMenu = document.getElementById("contextMenu");
 const colourMenu = document.getElementById("colour");
+const detailMenu = document.getElementById("detail");
 const colourOptions = document.getElementById("colourOptions");
+const quickInfo = document.getElementById("quickInfo");
 const colourOptionText = document.getElementById("colourOptionText");
+const detailOptionText = document.getElementById("detailOptionText");
 const maxWeight = document.getElementById("maxWeight");
 const curWeight = document.getElementById("curWeight");
 const curWeightBar = document.getElementById("curWeightBar");
@@ -62,8 +67,9 @@ let idCounter = 0;
 let heldItemID;
 let contextItemID;
 let colourMenuOpen = false;
+let quickInfoOpen = false;
 let loading = false;
-let maxWeightValue = 10;
+let maxWeightValue = 50;
 let curWeightValue = 0;
 adjustWeight();
 const gridBlockLength = 2.3; /*4.6*/
@@ -78,7 +84,7 @@ curWeight.innerHTML = curWeightValue.toString();
 // Populating Item menu -- to be moved to a separate file for scalability
 let items = [];
 
-items.push(new item(1, 2, "images/dagger.svg", "dagger"));
+items.push(new item(1, 2, "images/dagger.svg", "dagger", "1d4 piercing damage<br> finesse, light, thrown (20/60)", "Ideal for stealthy attacks or as a backup weapon."));
 items.push(new item(1, 3, "images/Club.svg", "club"));
 items.push(new item(2, 5, "images/Greatclub.svg", "greatclub"));
 items.push(new item(1, 5, "images/Javelin.svg", "javelin"));
@@ -170,6 +176,7 @@ gridBlocks.addEventListener("contextmenu", (Event) => {
   }
 });
 colourMenu.addEventListener("click", showColourOptions);
+detailMenu.addEventListener("click", showQuickInfo);
 
 // LOAD PROFILE FROM FILE
 function loadItems(profile) {
@@ -254,6 +261,8 @@ function copyItemFromFile(itemType) {
     itemType.height,
     itemType.image,
     itemType.name,
+    itemType.quickInfo,
+    itemType.details,
     itemType.colour,
     itemType.rotated
   );
@@ -319,6 +328,8 @@ function copyItem(itemType) {
       itemType.height,
       itemType.image,
       itemType.name,
+      itemType.quickInfo,
+      itemType.details,
       colourCodes.grey
     );
     console.log("pickupItem");
@@ -346,6 +357,7 @@ function pickupItem(id, event) {
   }
 }
 
+//  ROTATE ITEM
 function rotateItem(event) {
   if (holding && (event.key == "r" || event.key == "R")) {
     const item = document.getElementById(heldItemID);
@@ -427,12 +439,38 @@ function renameItem() {
   colourOptionText.innerHTML = "COLOUR &#11208";
 }
 
+// SHOW QUICK INFO
+function showQuickInfo() {
+  const quickInfoValue = inventory[contextItemID].quickInfo;
+  // const details = inventory[contextItemID].details;
+
+  if (!quickInfoOpen) {
+    quickInfoOpen = true;
+    quickInfo.classList.add("open");
+    quickInfo.classList.remove("close");
+    quickInfo.innerHTML = quickInfoValue;
+    detailOptionText.innerHTML = "DETAIL &#11207";
+  } else {
+    quickInfoOpen = false;
+    quickInfo.classList.remove("open");
+    quickInfo.classList.add("close");
+    detailOptionText.innerHTML = "DETAIL &#11208";
+  }
+}
+
 //  CLOSE CONTEXT MENU
 function closeContextMenu(event) {
   if (event.target.parentElement.id != "contextMenu") {
+    colourOptions.classList.remove("open");
+    colourOptions.classList.add("close");
+    colourMenuOpen = false;
+    quickInfoOpen = false;
+    quickInfo.classList.remove("open");
+    quickInfo.classList.add("close");
     contextMenu.classList.remove("open");
     contextMenu.classList.add("close");
     colourOptionText.innerHTML = "COLOUR &#11208";
+    detailOptionText.innerHTML = "DETAIL &#11208";
   }
 }
 
