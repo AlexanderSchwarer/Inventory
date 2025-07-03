@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "esbuild": "0.25.5"
+  },
+  "scripts": {
+    "build": "./node_modules/.bin/esbuild ./src/Interface.js --bundle --outfile=./src/Out.js"
+  }
+}
